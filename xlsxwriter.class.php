@@ -394,7 +394,6 @@ class XLSXWriter
 		} elseif ($num_format_type=='n_numeric') {			
 			//$file->write('<c r="'.$cell_name.'" s="'.$cell_style_idx.'" t="n"><v>'.self::xmlspecialchars($value).'</v></c>');//int,float,currency
 			// this old approach does not accept strings in supposed 'numeric' cells. Changed to auto-detect
-		
 			if (!is_string($value) || $value=='0' || ($value[0]!='0' && ctype_digit($value)) || preg_match("/^\-?(0|[1-9][0-9]*)(\.[0-9]+)?$/", $value)){
 				$file->write('<c r="'.$cell_name.'" s="'.$cell_style_idx.'" t="n"><v>'.self::xmlspecialchars($value).'</v></c>');//int,float,currency
 			} else { //implied: ($cell_format=='string')
