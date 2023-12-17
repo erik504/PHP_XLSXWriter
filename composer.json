@@ -5,6 +5,12 @@
     "type": "library",
     "homepage": "https://github.com/mk-j/PHP_XLSXWriter",
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/erik504/php_xlsxwriter"
+        }
+    ],
 
     "autoload": {
         "classmap": ["xlsxwriter.class.php"]
@@ -14,6 +20,7 @@
     },
     "require": {
         "php": ">=5.2.1",
-        "ext-zip": "*"
+        "ext-zip": "*",
+        "mk-j/php_xlsxwriter": "dev-erik504"
     }
 }
