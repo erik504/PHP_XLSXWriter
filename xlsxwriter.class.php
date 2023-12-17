@@ -794,7 +794,7 @@ class XLSXWriter
 		if ($num_format=='GENERAL') return 'n_auto';
 		if ($num_format=='@') return 'n_string';
 		if ($num_format=='0') return 'n_numeric';
-		//if ($num_format=='0.0000') return 'n_numeric';
+		if ($num_format=='0.0000') return 'n_numeric';
 		if (preg_match('/[H]{1,2}:[M]{1,2}(?![^"]*+")/i', $num_format)) return 'n_datetime';
 		if (preg_match('/[M]{1,2}:[S]{1,2}(?![^"]*+")/i', $num_format)) return 'n_datetime';
 		if (preg_match('/[Y]{2,4}(?![^"]*+")/i', $num_format)) return 'n_date';
