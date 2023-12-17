@@ -5,6 +5,7 @@
     "type": "library",
     "homepage": "https://github.com/mk-j/PHP_XLSXWriter",
     "license": "MIT",
+
     "autoload": {
         "classmap": ["xlsxwriter.class.php"]
     },
