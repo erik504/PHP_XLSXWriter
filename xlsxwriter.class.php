@@ -278,9 +278,9 @@ class XLSXWriter
 			$sheet->columns = array_merge((array)$sheet->columns, $default_column_types);
 		}
 		
-		$ht = (!is_null($row_height) ? floatval($row_height) : 12.1 );
-        $customHt = !is_null($row_height);
-        $hidden = (!is_null($row_hidden) ? (bool)($row_hidden) : false );
+		$ht        = (!is_null($row_height) ? floatval($row_height) : 12.1 );
+        $customHt  =  !is_null($row_height);
+        $hidden    = (!is_null($row_hidden) ? (bool)($row_hidden) : false );
         $collapsed = (!is_null($row_collapsed) ? (bool)($row_collapsed) : false );
 		if (!empty($row_options))
 		{
