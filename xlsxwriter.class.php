@@ -262,7 +262,11 @@ class XLSXWriter
 		$this->current_sheet = $sheet_name;
 	}
 
-	public function writeSheetRow($sheet_name, array $row, $row_options=null)
+	public function writeSheetRow($sheet_name, array $row, $row_options=null,
+		                          $row_height=null,
+		                          $row_hidden=null,
+		                          $row_collapsed=null
+		                      )
 	{
 		if (empty($sheet_name))
 			return;
@@ -274,12 +278,19 @@ class XLSXWriter
 			$sheet->columns = array_merge((array)$sheet->columns, $default_column_types);
 		}
 		
+		$ht = (!is_null($row_height) ? floatval($row_height) : 12.1 );
+        $customHt = !is_null($row_height);
+        $hidden = (!is_null($row_hidden) ? (bool)($row_hidden) : false );
+        $collapsed = (!is_null($row_collapsed) ? (bool)($row_collapsed) : false );
 		if (!empty($row_options))
 		{
-			$ht = isset($row_options['height']) ? floatval($row_options['height']) : 12.1;
-			$customHt = isset($row_options['height']) ? true : false;
-			$hidden = isset($row_options['hidden']) ? (bool)($row_options['hidden']) : false;
-			$collapsed = isset($row_options['collapsed']) ? (bool)($row_options['collapsed']) : false;
+			$ht        = isset($row_options['height'])    ? floatval($row_options['height'])  : $ht;
+			$customHt  = isset($row_options['height'] )   ? true                              : $customHt;
+			$hidden    = isset($row_options['hidden'])    ? (bool)($row_options['hidden'])    : $hidden;
+			$collapsed = isset($row_options['collapsed']) ? (bool)($row_options['collapsed']) : $collapsed;
+		}	
+		if ($customHt || $hidden || $collapsed) 
+		{	
 			$sheet->file_writer->write('<row collapsed="'.($collapsed ? 'true' : 'false').'" customFormat="false" customHeight="'.($customHt ? 'true' : 'false').'" hidden="'.($hidden ? 'true' : 'false').'" ht="'.($ht).'" outlineLevel="0" r="' . ($sheet->row_count + 1) . '">');
 		}
 		else
