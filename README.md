@@ -5,7 +5,8 @@ This is a fork from https://github.com/mk-j/PHP_XLSXWriter:master
 ===========================================================================
 
 WORK IN PROGRESS to remove limitation:
- - row-wide parameters (height, hidden, collapsed) even if single cell are specified in $row_options as [ [...], [...], [...], ...] [OK]
+ - fix: xlsx format error when writing string in numericly-formatted cells [OK]
+ - added row-wide parameters (height, hidden, collapsed) even if single-cell-styled $row_options as [ [...], [...], [...], ...] [OK]
  - default number formatting from headers without writing values into cells [OK]
  - different borders on single cells [TBD]
  - number formatting for each cells [TBD]
