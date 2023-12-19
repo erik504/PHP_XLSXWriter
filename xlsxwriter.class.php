@@ -215,18 +215,6 @@ class XLSXWriter
 		return $column_types;
 	}
 
-    public function rowUp($sheet_name, $n = 1) 
-    {
-      $this->sheets[$sheet_name]->row_count = $this->sheets[$sheet_name]->row_count - $n;
-      $this->current_sheet = $sheet_name;
-    }
-
-    public function rowDown($sheet_name, $n = 1) 
-    {
-      $this->sheets[$sheet_name]->row_count = $this->sheets[$sheet_name]->row_count + $n;
-      $this->current_sheet = $sheet_name;
-    }
-
 	public function writeSheetHeader($sheet_name, array $header_types, $col_options = null)
 	{
 		if (empty($sheet_name) || empty($header_types))
@@ -249,8 +237,7 @@ class XLSXWriter
 		$sheet->columns = $this->initializeColumnTypes($header_types);
 		if (!$suppress_row)
 		{
-			$header_row = array_keys($header_types);      
-
+			$header_row = array_keys($header_types);
 			$sheet->file_writer->write('<row collapsed="false" customFormat="false" customHeight="false" hidden="false" ht="12.1" outlineLevel="0" r="' . ($sheet->row_count+1) . '">');
 			foreach ($header_row as $c => $v) {
 				$cell_style_idx = empty($style) ? $sheet->columns[$c]['default_cell_style'] : $this->addCellStyle( 'GENERAL', json_encode(isset($style[0]) ? $style[$c] : $style) );
@@ -259,13 +246,24 @@ class XLSXWriter
 			$sheet->file_writer->write('</row>');
 			$sheet->row_count++;
 		}
+		else
+		{
+			$header_row = array_keys($header_types);
+			//$sheet->file_writer->write('<row collapsed="false" customFormat="false" customHeight="false" hidden="false" ht="12.1" outlineLevel="0" r="' . ($sheet->row_count+1) . '">');
+			foreach ($header_row as $c => $v) {
+				$cell_style_idx = empty($style) ? $sheet->columns[$c]['default_cell_style'] : $this->addCellStyle( 'GENERAL', json_encode(isset($style[0]) ? $style[$c] : $style) );
+			//	$this->writeCell($sheet->file_writer, $sheet->row_count, $c, $v, $number_format_type='n_string', $cell_style_idx);
+			}
+			//$sheet->file_writer->write('</row>');
+			//$sheet->row_count++;
+		}
 		$this->current_sheet = $sheet_name;
 	}
 
 	public function writeSheetRow($sheet_name, array $row, $row_options=null,
 		                          $row_height=null,
 		                          $row_hidden=null,
-		                          $row_collapsed=null
+		                          $row_collapsed=null,
 		                      )
 	{
 		if (empty($sheet_name))
@@ -277,18 +275,20 @@ class XLSXWriter
 			$default_column_types = $this->initializeColumnTypes( array_fill($from=0, $until=count($row), 'GENERAL') );//will map to n_auto
 			$sheet->columns = array_merge((array)$sheet->columns, $default_column_types);
 		}
-		
+		// from row parameters
 		$ht        = (!is_null($row_height) ? floatval($row_height) : 12.1 );
         $customHt  =  !is_null($row_height);
         $hidden    = (!is_null($row_hidden) ? (bool)($row_hidden) : false );
         $collapsed = (!is_null($row_collapsed) ? (bool)($row_collapsed) : false );
+		
+		// from single cell parameters
 		if (!empty($row_options))
 		{
 			$ht        = isset($row_options['height'])    ? floatval($row_options['height'])  : $ht;
 			$customHt  = isset($row_options['height'] )   ? true                              : $customHt;
 			$hidden    = isset($row_options['hidden'])    ? (bool)($row_options['hidden'])    : $hidden;
 			$collapsed = isset($row_options['collapsed']) ? (bool)($row_options['collapsed']) : $collapsed;
-		}	
+		}
 		if ($customHt || $hidden || $collapsed) 
 		{	
 			$sheet->file_writer->write('<row collapsed="'.($collapsed ? 'true' : 'false').'" customFormat="false" customHeight="'.($customHt ? 'true' : 'false').'" hidden="'.($hidden ? 'true' : 'false').'" ht="'.($ht).'" outlineLevel="0" r="' . ($sheet->row_count + 1) . '">');
@@ -569,6 +569,12 @@ class XLSXWriter
 
 		$file->write('<borders count="'.(count($borders)).'">');
         $file->write(    '<border diagonalDown="false" diagonalUp="false"><left/><right/><top/><bottom/><diagonal/></border>');
+		
+         
+        // 
+        // LIMITATION: single border style for every border in a cell
+        // TO BE MODIFIED
+        //
 		foreach($borders as $border) {
 			if (!empty($border)) { //fonts have an empty placeholder in the array to offset the static xml entry above
 				$pieces = json_decode($border,true);
