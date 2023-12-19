@@ -263,7 +263,7 @@ class XLSXWriter
 	public function writeSheetRow($sheet_name, array $row, $row_options=null,
 		                          $row_height=null,
 		                          $row_hidden=null,
-		                          $row_collapsed=null,
+		                          $row_collapsed=null
 		                      )
 	{
 		if (empty($sheet_name))
